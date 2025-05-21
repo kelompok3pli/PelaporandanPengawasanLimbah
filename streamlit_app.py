@@ -3,15 +3,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
 import os
-from streamlit_lottie import st_lottie
-import requests
 
-# Fungsi load animasi Lottie dari URL
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+# ============ CUSTOM CSS UNTUK BACKGROUND ============ #
+st.markdown(
+    """
+    <style>
+        body, .stApp {
+            background-color: #e6f9e6; /* Light green */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Buat folder data jika belum ada
 DATA_PATH = "data/laporan_limbah.csv"
@@ -22,7 +25,7 @@ if not os.path.exists(DATA_PATH):
     df_init = pd.DataFrame(columns=["Tanggal", "Jenis Limbah", "Volume (kg)", "Lokasi", "Keterangan"])
     df_init.to_csv(DATA_PATH, index=False)
 
-# Ambang batas (NAB) SNI contoh dalam kg (sesuaikan sesuai standar sebenarnya)
+# Ambang batas (NAB) SNI contoh dalam kg
 ambang_batas_sni = {
     "Organik": 100.0,
     "Anorganik": 50.0,
@@ -31,29 +34,23 @@ ambang_batas_sni = {
     "Padat": 40.0
 }
 
-# Fungsi simpan laporan baru ke CSV
+# Fungsi simpan laporan baru
 def simpan_laporan(data):
     df = pd.read_csv(DATA_PATH)
     df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
     df.to_csv(DATA_PATH, index=False)
 
-# Load animasi Lottie
-lottie_json = load_lottieurl("https://lottie.host/7915dd54-2164-4a28-8b4a-8088e25477a0/LuARVW5S95.json")
+# Sidebar navigasi
+st.sidebar.title("♻️ Navigasi Aplikasi")
+menu = st.sidebar.radio("Pilih Halaman:", [
+    "Beranda",
+    "Formulir Pelaporan",
+    "Riwayat Pelaporan",
+    "Grafik Pengawasan",
+    "K3 dari Limbah"
+])
 
-# Sidebar dengan animasi dan menu navigasi
-with st.sidebar:
-    if lottie_json:
-        st_lottie(lottie_json, height=200, key="navigasi")
-    st.title("♻️ Navigasi Aplikasi")
-    menu = st.radio("Pilih Halaman:", [
-        "Beranda",
-        "Formulir Pelaporan",
-        "Riwayat Pelaporan",
-        "Grafik Pengawasan",
-        "K3 dari Limbah"
-    ])
-
-# ====== 0. BERANDA ======
+# =========================== 0. BERANDA ===========================
 if menu == "Beranda":
     st.title("🏠 Beranda Aplikasi Pelaporan Limbah")
     st.markdown(
@@ -87,7 +84,7 @@ if menu == "Beranda":
         """
     )
 
-# ====== 1. FORMULIR PELAPORAN ======
+# =========================== 1. FORMULIR PELAPORAN ===========================
 elif menu == "Formulir Pelaporan":
     st.title("📝 Formulir Pelaporan Limbah")
     st.markdown(
@@ -112,7 +109,6 @@ elif menu == "Formulir Pelaporan":
         lokasi = st.text_input("Lokasi")
         keterangan = st.text_area("Keterangan")
 
-        # Tampilkan NAB SNI untuk jenis yang dipilih
         st.info(f"Nilai Ambang Batas (NAB) SNI untuk limbah {jenis} adalah {ambang_batas_sni[jenis]} kg.")
 
         submitted = st.form_submit_button("Kirim Laporan")
@@ -130,7 +126,7 @@ elif menu == "Formulir Pelaporan":
             simpan_laporan(data)
             st.success("✅ Laporan berhasil dikirim!")
 
-# ====== 2. RIWAYAT PELAPORAN ======
+# =========================== 2. RIWAYAT PELAPORAN ===========================
 elif menu == "Riwayat Pelaporan":
     st.title("📄 Riwayat Pelaporan")
     st.markdown(
@@ -160,7 +156,7 @@ elif menu == "Riwayat Pelaporan":
                     st.success("✅ Semua riwayat berhasil dihapus.")
                     st.experimental_rerun()
 
-# ====== 3. GRAFIK PENGAWASAN ======
+# =========================== 3. GRAFIK PENGAWASAN ===========================
 elif menu == "Grafik Pengawasan":
     st.title("📈 Grafik Pengawasan Limbah")
     st.markdown(
@@ -186,7 +182,6 @@ elif menu == "Grafik Pengawasan":
         fig, ax = plt.subplots(figsize=(10, 5))
         grouped.plot(ax=ax)
 
-        # Tambahkan garis ambang batas per jenis limbah
         for jenis, batas in ambang_batas_sni.items():
             if jenis in grouped.columns:
                 ax.axhline(y=batas, color='r', linestyle='--', linewidth=1, alpha=0.7)
@@ -198,7 +193,7 @@ elif menu == "Grafik Pengawasan":
         plt.grid(True)
         st.pyplot(fig)
 
-# ====== 4. K3 DARI LIMBAH ======
+# =========================== 4. K3 DARI LIMBAH ===========================
 elif menu == "K3 dari Limbah":
     st.title("🩺 K3 dari Limbah")
     st.markdown(
