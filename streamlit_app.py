@@ -47,13 +47,14 @@ def simpan_laporan(data):
     df.to_csv(DATA_PATH, index=False)
 
 # ================== SIDEBAR NAVIGASI ================== #
+st.sidebar.title("♻️ Navigasi Aplikasi")
 
-  # Animasi Lottie
-    lottie_json = load_lottieurl("https://lottie.host/7915dd54-2164-4a28-8b4a-8088e25477a0/LuARVW5S95.json")
-    if lottie_json:
+# Animasi Lottie di Sidebar
+lottie_json = load_lottieurl("https://lottie.host/7915dd54-2164-4a28-8b4a-8088e25477a0/LuARVW5S95.json")
+if lottie_json:
+    with st.sidebar:
         st_lottie(lottie_json, height=200, key="Navigasi")
 
-st.sidebar.title("♻️ Navigasi Aplikasi")
 menu = st.sidebar.radio("Pilih Halaman:", [
     "Beranda",
     "Formulir Pelaporan",
@@ -99,11 +100,7 @@ if menu == "Beranda":
 # ================== 1. FORMULIR PELAPORAN ================== #
 elif menu == "Formulir Pelaporan":
     st.title("📝 Formulir Pelaporan Limbah")
-    st.markdown(
-        """
-        Halaman ini digunakan untuk mengisi dan mengirim laporan limbah.
-        """
-    )
+    st.markdown("Halaman ini digunakan untuk mengisi dan mengirim laporan limbah.")
 
     with st.form("form_limbah"):
         tanggal = st.date_input("Tanggal", value=datetime.today())
@@ -117,17 +114,20 @@ elif menu == "Formulir Pelaporan":
         submitted = st.form_submit_button("Kirim Laporan")
 
         if submitted:
-            if volume > ambang_batas_sni[jenis]:
-                st.warning(f"⚠️ Volume limbah melebihi NAB SNI ({ambang_batas_sni[jenis]} kg).")
-            data = {
-                "Tanggal": tanggal.strftime("%Y-%m-%d"),
-                "Jenis Limbah": jenis,
-                "Volume (kg)": volume,
-                "Lokasi": lokasi,
-                "Keterangan": keterangan
-            }
-            simpan_laporan(data)
-            st.success("✅ Laporan berhasil dikirim!")
+            if not lokasi.strip():
+                st.error("❌ Lokasi tidak boleh kosong.")
+            else:
+                if volume > ambang_batas_sni[jenis]:
+                    st.warning(f"⚠️ Volume limbah melebihi NAB SNI ({ambang_batas_sni[jenis]} kg).")
+                data = {
+                    "Tanggal": tanggal.strftime("%Y-%m-%d"),
+                    "Jenis Limbah": jenis,
+                    "Volume (kg)": volume,
+                    "Lokasi": lokasi,
+                    "Keterangan": keterangan
+                }
+                simpan_laporan(data)
+                st.success("✅ Laporan berhasil dikirim!")
 
 # ================== 2. RIWAYAT PELAPORAN ================== #
 elif menu == "Riwayat Pelaporan":
@@ -183,9 +183,7 @@ elif menu == "K3 dari Limbah":
         st_lottie(lottie_json, height=200, key="K3 dari Limbah")
 
     st.markdown(
-        """
-        Halaman ini memberikan informasi K3 (Keselamatan dan Kesehatan Kerja) berdasarkan jenis limbah.
-        """
+        "Halaman ini memberikan informasi K3 (Keselamatan dan Kesehatan Kerja) berdasarkan jenis limbah."
     )
 
     info_k3 = {
