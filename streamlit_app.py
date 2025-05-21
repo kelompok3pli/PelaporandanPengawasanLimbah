@@ -24,6 +24,12 @@ menu = st.sidebar.radio("Pilih Halaman:", ["Formulir Pelaporan", "Riwayat Pelapo
 # Halaman 1: Formulir Pelaporan
 if menu == "Formulir Pelaporan":
     st.title("📝 Formulir Pelaporan Limbah")
+    st.markdown(
+        """
+        Halaman ini digunakan untuk mengisi dan mengirim laporan limbah yang dihasilkan.
+        Silakan lengkapi semua kolom yang tersedia dan klik **Kirim Laporan**.
+        """
+    )
     with st.form("form_limbah"):
         tanggal = st.date_input("Tanggal", value=datetime.today())
         jenis = st.selectbox("Jenis Limbah", ["Organik", "Anorganik", "B3", "Cair", "Padat"])
@@ -47,6 +53,12 @@ if menu == "Formulir Pelaporan":
 # Halaman 2: Riwayat Pelaporan
 elif menu == "Riwayat Pelaporan":
     st.title("📄 Riwayat Pelaporan")
+    st.markdown(
+        """
+        Halaman ini menampilkan seluruh laporan limbah yang telah dikirim.
+        Data ditampilkan dalam bentuk tabel agar dapat ditinjau kembali.
+        """
+    )
     df = pd.read_csv(DATA_PATH)
     if df.empty:
         st.info("Belum ada laporan.")
@@ -56,6 +68,12 @@ elif menu == "Riwayat Pelaporan":
 # Halaman 3: Grafik Pengawasan
 elif menu == "Grafik Pengawasan":
     st.title("📈 Grafik Pengawasan Limbah")
+    st.markdown(
+        """
+        Halaman ini menampilkan visualisasi grafik tren volume limbah berdasarkan jenis dan tanggal.
+        Grafik membantu memantau peningkatan atau penurunan limbah dari waktu ke waktu.
+        """
+    )
     df = pd.read_csv(DATA_PATH)
     if df.empty:
         st.warning("Belum ada data untuk ditampilkan.")
@@ -70,4 +88,3 @@ elif menu == "Grafik Pengawasan":
         plt.ylabel("Volume (kg)")
         plt.xticks(rotation=45)
         st.pyplot(fig)
-
