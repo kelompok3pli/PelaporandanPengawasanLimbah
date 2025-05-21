@@ -194,6 +194,9 @@ elif menu == "Grafik Pengawasan":
         st.pyplot(fig)
 
 # =========================== 4. K3 DARI LIMBAH ===========================
+lottie_json = load_lottieurl("https://lottie.host/9d8b6315-5325-4d75-873a-de0de745464f/5kP3gMsiYc.json")
+    if lottie_json:
+        st_lottie(lottie_json, height=200, key="K3 dari Limbah")
 elif menu == "K3 dari Limbah":
     st.title("🩺 K3 dari Limbah")
     st.markdown(
