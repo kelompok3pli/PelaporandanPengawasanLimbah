@@ -62,11 +62,6 @@ if menu == "Beranda":
         3. Pantau tren di *Grafik Pengawasan*.
         4. Gunakan halaman *K3 dari Limbah* untuk memastikan penanganan yang aman.
 
-        ---
-        🛠️ **Versi:** 1.0  
-        🗓️ **Update Terakhir:** Mei 2025  
-        💻 **Dikembangkan dengan:** Streamlit + Python  
-        """
     )
 
 # ===========================
