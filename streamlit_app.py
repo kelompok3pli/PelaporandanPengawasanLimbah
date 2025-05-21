@@ -19,9 +19,14 @@ def simpan_laporan(data):
     df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
     df.to_csv(DATA_PATH, index=False)
 
-# Sidebar
+# Sidebar Menu
 st.sidebar.title("📊 Menu Utama")
-menu = st.sidebar.radio("Pilih Halaman:", ["Formulir Pelaporan", "Riwayat Pelaporan", "Grafik Pengawasan"])
+menu = st.sidebar.radio("Pilih Halaman:", [
+    "Formulir Pelaporan",
+    "Riwayat Pelaporan",
+    "Grafik Pengawasan",
+    "K3 dari Limbah"
+])
 
 # ===========================
 # 1. FORMULIR PELAPORAN
@@ -31,14 +36,13 @@ if menu == "Formulir Pelaporan":
     st.markdown(
         """
         Halaman ini digunakan untuk mengisi dan mengirim laporan limbah.
-        Silakan lengkapi semua kolom pada formulir berikut ini.
 
         #### 📌 Petunjuk Pengisian:
         - **Tanggal:** Pilih tanggal pelaporan.
-        - **Jenis Limbah:** Pilih kategori jenis limbah yang relevan.
-        - **Volume (kg):** Masukkan volume limbah dalam satuan kilogram.
-        - **Lokasi:** Masukkan lokasi tempat limbah ditemukan atau dihasilkan.
-        - **Keterangan:** Tambahkan catatan penting jika ada.
+        - **Jenis Limbah:** Pilih kategori jenis limbah.
+        - **Volume (kg):** Masukkan volume dalam kilogram.
+        - **Lokasi:** Tulis lokasi ditemukannya limbah.
+        - **Keterangan:** Tambahkan catatan penting jika diperlukan.
         """
     )
 
@@ -72,9 +76,9 @@ elif menu == "Riwayat Pelaporan":
         Halaman ini menampilkan seluruh laporan limbah yang telah dikirim.
 
         #### 📌 Petunjuk:
-        - Data laporan ditampilkan dalam bentuk tabel.
-        - Gunakan scroll atau filter (Ctrl+F) untuk mencari laporan tertentu.
-        - Klik tombol hapus jika ingin membersihkan semua data.
+        - Data ditampilkan dalam bentuk tabel.
+        - Gunakan pencarian (Ctrl+F) untuk menemukan laporan.
+        - Anda bisa menghapus semua riwayat jika diperlukan.
         """
     )
 
@@ -85,7 +89,6 @@ elif menu == "Riwayat Pelaporan":
     else:
         st.dataframe(df)
 
-        # Tombol hapus seluruh data
         with st.expander("⚠️ Hapus Semua Riwayat", expanded=False):
             st.warning("Tindakan ini akan menghapus **semua** data laporan secara permanen.")
             if st.checkbox("Saya yakin ingin menghapus semua data."):
@@ -102,11 +105,11 @@ elif menu == "Grafik Pengawasan":
     st.title("📈 Grafik Pengawasan Limbah")
     st.markdown(
         """
-        Halaman ini menampilkan grafik tren volume limbah yang telah dilaporkan.
+        Halaman ini menampilkan tren volume limbah berdasarkan tanggal dan jenis.
 
         #### 📌 Petunjuk:
-        - Grafik menunjukkan total volume limbah berdasarkan **jenis** dan **tanggal**.
-        - Gunakan grafik ini untuk memantau kecenderungan peningkatan atau penurunan limbah.
+        - Grafik menunjukkan volume limbah per hari.
+        - Gunakan grafik untuk memantau tren penurunan atau kenaikan.
         """
     )
 
@@ -126,3 +129,53 @@ elif menu == "Grafik Pengawasan":
         plt.xticks(rotation=45)
         plt.grid(True)
         st.pyplot(fig)
+
+# ===========================
+# 4. K3 DARI LIMBAH
+# ===========================
+elif menu == "K3 dari Limbah":
+    st.title("🦺 K3 dari Limbah")
+    st.markdown(
+        """
+        Halaman ini memberikan informasi K3 (Keselamatan dan Kesehatan Kerja)
+        berdasarkan jenis limbah yang dilaporkan.
+
+        #### 📌 Petunjuk:
+        - Pilih jenis limbah untuk melihat potensi bahaya dan penanganan.
+        - Gunakan informasi ini untuk menyusun SOP K3 internal.
+        """
+    )
+
+    info_k3 = {
+        "Organik": {
+            "Bahaya": "Bau, gas metana, pembusukan, mikroorganisme.",
+            "APD": "Sarung tangan, masker, pelindung mata.",
+            "Penanganan": "Pisahkan dari limbah lain, komposkan jika memungkinkan."
+        },
+        "Anorganik": {
+            "Bahaya": "Benda tajam, tidak terurai, bahan berbahaya.",
+            "APD": "Sarung tangan tahan sobek, alas kaki tertutup.",
+            "Penanganan": "Kumpulkan untuk daur ulang, hindari pembakaran."
+        },
+        "B3": {
+            "Bahaya": "Racun, korosif, mudah terbakar, reaktif.",
+            "APD": "Sarung tangan kimia, pelindung wajah, sepatu safety.",
+            "Penanganan": "Ikuti SOP B3, simpan terpisah dan berlabel jelas."
+        },
+        "Cair": {
+            "Bahaya": "Tumpahan, licin, kontaminasi air.",
+            "APD": "Sarung tangan tahan air, pelindung kaki.",
+            "Penanganan": "Simpan dalam wadah tertutup, jangan dicampur dengan limbah lain."
+        },
+        "Padat": {
+            "Bahaya": "Debu, serpihan, tersandung.",
+            "APD": "Masker, sarung tangan.",
+            "Penanganan": "Bungkus rapi, pisahkan dari limbah basah."
+        }
+    }
+
+    jenis_pilihan = st.selectbox("Pilih Jenis Limbah:", list(info_k3.keys()))
+    st.subheader(f"🔍 Informasi K3 untuk Limbah: {jenis_pilihan}")
+    st.write(f"**Potensi Bahaya:** {info_k3[jenis_pilihan]['Bahaya']}")
+    st.write(f"**APD yang Disarankan:** {info_k3[jenis_pilihan]['APD']}")
+    st.write(f"**Tindakan Penanganan:** {info_k3[jenis_pilihan]['Penanganan']}")
