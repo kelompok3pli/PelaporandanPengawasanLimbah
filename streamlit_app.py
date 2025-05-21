@@ -61,7 +61,6 @@ if menu == "Beranda":
         2. Cek *Riwayat Pelaporan* untuk melihat laporan sebelumnya.
         3. Pantau tren di *Grafik Pengawasan*.
         4. Gunakan halaman *K3 dari Limbah* untuk memastikan penanganan yang aman.
-
     )
 
 # ===========================
