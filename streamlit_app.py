@@ -20,8 +20,9 @@ def simpan_laporan(data):
     df.to_csv(DATA_PATH, index=False)
 
 # Sidebar Menu
-st.sidebar.title("📊 Menu Utama")
+st.sidebar.title("♻️ Navigasi Aplikasi")
 menu = st.sidebar.radio("Pilih Halaman:", [
+    "Beranda",
     "Formulir Pelaporan",
     "Riwayat Pelaporan",
     "Grafik Pengawasan",
@@ -29,9 +30,49 @@ menu = st.sidebar.radio("Pilih Halaman:", [
 ])
 
 # ===========================
+# 0. BERANDA
+# ===========================
+if menu == "Beranda":
+    st.title("🏠 Beranda Aplikasi Pelaporan Limbah")
+    st.markdown(
+        """
+        ## 👋 Selamat Datang!
+        Aplikasi ini dirancang untuk membantu proses **pelaporan, pengawasan, dan manajemen limbah** secara digital dan terstruktur.
+
+        ### 🌟 Tujuan:
+        - Menyederhanakan proses pencatatan limbah di lapangan.
+        - Menyediakan grafik tren volume limbah untuk pemantauan.
+        - Memberikan referensi keselamatan kerja (K3) untuk setiap jenis limbah.
+
+        ### 👤 Pengguna:
+        - Petugas kebersihan lingkungan
+        - Staf pengelola limbah B3
+        - Tim K3 perusahaan/instansi
+
+        ### 🔧 Fitur Utama:
+        - ✅ Formulir pelaporan limbah harian
+        - 📄 Riwayat laporan yang tersimpan otomatis
+        - 📈 Grafik volume limbah per hari & jenis
+        - 🩺 Informasi K3 berdasarkan jenis limbah
+        - 🭹 Tombol hapus riwayat pelaporan (opsional)
+
+        ### 📌 Cara Menggunakan:
+        1. Masuk ke *Formulir Pelaporan* dan isi data sesuai kondisi di lapangan.
+        2. Cek *Riwayat Pelaporan* untuk melihat laporan sebelumnya.
+        3. Pantau tren di *Grafik Pengawasan*.
+        4. Gunakan halaman *K3 dari Limbah* untuk memastikan penanganan yang aman.
+
+        ---
+        🛠️ **Versi:** 1.0  
+        🗓️ **Update Terakhir:** Mei 2025  
+        💻 **Dikembangkan dengan:** Streamlit + Python  
+        """
+    )
+
+# ===========================
 # 1. FORMULIR PELAPORAN
 # ===========================
-if menu == "Formulir Pelaporan":
+elif menu == "Formulir Pelaporan":
     st.title("📝 Formulir Pelaporan Limbah")
     st.markdown(
         """
@@ -134,7 +175,7 @@ elif menu == "Grafik Pengawasan":
 # 4. K3 DARI LIMBAH
 # ===========================
 elif menu == "K3 dari Limbah":
-    st.title("🦺 K3 dari Limbah")
+    st.title("🩺 K3 dari Limbah")
     st.markdown(
         """
         Halaman ini memberikan informasi K3 (Keselamatan dan Kesehatan Kerja)
