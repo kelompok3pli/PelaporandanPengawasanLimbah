@@ -13,6 +13,15 @@ if not os.path.exists(DATA_PATH):
     df_init = pd.DataFrame(columns=["Tanggal", "Jenis Limbah", "Volume (kg)", "Lokasi", "Keterangan"])
     df_init.to_csv(DATA_PATH, index=False)
 
+# Ambang batas (NAB) SNI contoh dalam kg (Anda bisa sesuaikan)
+ambang_batas_sni = {
+    "Organik": 100.0,
+    "Anorganik": 50.0,
+    "B3": 10.0,
+    "Cair": 30.0,
+    "Padat": 40.0
+}
+
 # Fungsi simpan laporan baru
 def simpan_laporan(data):
     df = pd.read_csv(DATA_PATH)
@@ -43,6 +52,7 @@ if menu == "Beranda":
         - Menyederhanakan proses pencatatan limbah di lapangan.
         - Menyediakan grafik tren volume limbah untuk pemantauan.
         - Memberikan referensi keselamatan kerja (K3) untuk setiap jenis limbah.
+        - **Memantau apakah limbah melebihi nilai ambang batas (NAB) SNI.**
 
         ### 👤 Pengguna:
         - Petugas kebersihan lingkungan
@@ -52,7 +62,7 @@ if menu == "Beranda":
         ### 🔧 Fitur Utama:
         - ✅ Formulir pelaporan limbah harian
         - 📄 Riwayat laporan yang tersimpan otomatis
-        - 📈 Grafik volume limbah per hari & jenis
+        - 📈 Grafik volume limbah per hari & jenis dengan NAB
         - 🩺 Informasi K3 berdasarkan jenis limbah
         - 🗑️ Tombol hapus riwayat pelaporan (opsional)
 
@@ -79,19 +89,26 @@ elif menu == "Formulir Pelaporan":
         - **Volume (kg):** Masukkan volume dalam kilogram.
         - **Lokasi:** Tulis lokasi ditemukannya limbah.
         - **Keterangan:** Tambahkan catatan penting jika diperlukan.
+
+        ⚠️ *Perhatian*: Perhatikan nilai ambang batas volume limbah menurut SNI.
         """
     )
 
     with st.form("form_limbah"):
         tanggal = st.date_input("Tanggal", value=datetime.today())
-        jenis = st.selectbox("Jenis Limbah", ["Organik", "Anorganik", "B3", "Cair", "Padat"])
+        jenis = st.selectbox("Jenis Limbah", list(ambang_batas_sni.keys()))
         volume = st.number_input("Volume (kg)", min_value=0.0, step=0.1)
         lokasi = st.text_input("Lokasi")
         keterangan = st.text_area("Keterangan")
 
+        # Tampilkan NAB SNI untuk jenis yang dipilih
+        st.info(f"Nilai Ambang Batas (NAB) SNI untuk limbah {jenis} adalah {ambang_batas_sni[jenis]} kg.")
+
         submitted = st.form_submit_button("Kirim Laporan")
 
         if submitted:
+            if volume > ambang_batas_sni[jenis]:
+                st.warning(f"⚠️ Volume limbah melebihi nilai ambang batas SNI ({ambang_batas_sni[jenis]} kg). Harap tindak lanjuti sesuai prosedur!")
             data = {
                 "Tanggal": tanggal.strftime("%Y-%m-%d"),
                 "Jenis Limbah": jenis,
@@ -145,7 +162,8 @@ elif menu == "Grafik Pengawasan":
 
         #### 📌 Petunjuk:
         - Grafik menunjukkan volume limbah per hari.
-        - Gunakan grafik untuk memantau tren penurunan atau kenaikan.
+        - Garis horizontal menunjukkan nilai ambang batas (NAB) menurut SNI.
+        - Gunakan grafik untuk memantau tren penurunan atau kenaikan dan apakah melebihi NAB.
         """
     )
 
@@ -160,6 +178,13 @@ elif menu == "Grafik Pengawasan":
         st.subheader("Tren Volume Limbah per Hari")
         fig, ax = plt.subplots(figsize=(10, 5))
         grouped.plot(ax=ax)
+
+        # Tambahkan garis ambang batas per jenis limbah
+        for jenis, batas in ambang_batas_sni.items():
+            if jenis in grouped.columns:
+                ax.axhline(y=batas, color='r', linestyle='--', linewidth=1, alpha=0.7)
+                ax.text(grouped.index[-1], batas, f"NAB {jenis}: {batas}", color='r', fontsize=8, va='bottom', ha='right')
+
         plt.xlabel("Tanggal")
         plt.ylabel("Volume (kg)")
         plt.xticks(rotation=45)
