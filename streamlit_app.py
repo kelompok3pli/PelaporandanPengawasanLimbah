@@ -4,22 +4,22 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 
-# Lokasi file data
+# Buat folder data jika belum ada
 DATA_PATH = "data/laporan_limbah.csv"
 os.makedirs("data", exist_ok=True)
 
-# Inisialisasi file jika belum ada
+# Inisialisasi file CSV jika belum ada
 if not os.path.exists(DATA_PATH):
     df_init = pd.DataFrame(columns=["Tanggal", "Jenis Limbah", "Volume (kg)", "Lokasi", "Keterangan"])
     df_init.to_csv(DATA_PATH, index=False)
 
-# Fungsi untuk menyimpan data laporan baru
+# Fungsi simpan laporan baru
 def simpan_laporan(data):
     df = pd.read_csv(DATA_PATH)
     df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
     df.to_csv(DATA_PATH, index=False)
 
-# Sidebar Menu
+# Sidebar menu
 st.sidebar.title("♻️ Navigasi Aplikasi")
 menu = st.sidebar.radio("Pilih Halaman:", [
     "Beranda",
@@ -54,13 +54,14 @@ if menu == "Beranda":
         - 📄 Riwayat laporan yang tersimpan otomatis
         - 📈 Grafik volume limbah per hari & jenis
         - 🩺 Informasi K3 berdasarkan jenis limbah
-        - 🭹 Tombol hapus riwayat pelaporan (opsional)
+        - 🗑️ Tombol hapus riwayat pelaporan (opsional)
 
         ### 📌 Cara Menggunakan:
         1. Masuk ke *Formulir Pelaporan* dan isi data sesuai kondisi di lapangan.
         2. Cek *Riwayat Pelaporan* untuk melihat laporan sebelumnya.
         3. Pantau tren di *Grafik Pengawasan*.
         4. Gunakan halaman *K3 dari Limbah* untuk memastikan penanganan yang aman.
+        """
     )
 
 # ===========================
