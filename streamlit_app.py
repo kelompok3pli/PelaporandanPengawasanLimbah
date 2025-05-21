@@ -30,8 +30,15 @@ if menu == "Formulir Pelaporan":
     st.title("📝 Formulir Pelaporan Limbah")
     st.markdown(
         """
-        Halaman ini digunakan untuk mengisi dan mengirim laporan limbah yang dihasilkan.
-        Silakan lengkapi semua kolom yang tersedia dan klik **Kirim Laporan**.
+        Halaman ini digunakan untuk mengisi dan mengirim laporan limbah.
+        Silakan lengkapi semua kolom pada formulir berikut ini.
+
+        #### 📌 Petunjuk Pengisian:
+        - **Tanggal:** Pilih tanggal pelaporan.
+        - **Jenis Limbah:** Pilih kategori jenis limbah yang relevan.
+        - **Volume (kg):** Masukkan volume limbah dalam satuan kilogram.
+        - **Lokasi:** Masukkan lokasi tempat limbah ditemukan atau dihasilkan.
+        - **Keterangan:** Tambahkan catatan penting jika ada.
         """
     )
 
@@ -63,8 +70,11 @@ elif menu == "Riwayat Pelaporan":
     st.markdown(
         """
         Halaman ini menampilkan seluruh laporan limbah yang telah dikirim.
-        Data ditampilkan dalam bentuk tabel agar dapat ditinjau kembali.
-        Anda juga bisa menghapus seluruh riwayat jika diperlukan.
+
+        #### 📌 Petunjuk:
+        - Data laporan ditampilkan dalam bentuk tabel.
+        - Gunakan scroll atau filter (Ctrl+F) untuk mencari laporan tertentu.
+        - Klik tombol hapus jika ingin membersihkan semua data.
         """
     )
 
@@ -92,8 +102,11 @@ elif menu == "Grafik Pengawasan":
     st.title("📈 Grafik Pengawasan Limbah")
     st.markdown(
         """
-        Halaman ini menampilkan visualisasi grafik tren volume limbah berdasarkan jenis dan tanggal.
-        Grafik membantu memantau peningkatan atau penurunan limbah dari waktu ke waktu.
+        Halaman ini menampilkan grafik tren volume limbah yang telah dilaporkan.
+
+        #### 📌 Petunjuk:
+        - Grafik menunjukkan total volume limbah berdasarkan **jenis** dan **tanggal**.
+        - Gunakan grafik ini untuk memantau kecenderungan peningkatan atau penurunan limbah.
         """
     )
 
