@@ -17,7 +17,7 @@ if not os.path.exists(DATA_PATH):
 ambang_batas_sni = {
     "Organik": 100.0,
     "Anorganik": 50.0,
-    "B3": 10.0,
+    "B3": 50.0,
     "Cair": 30.0,
     "Padat": 40.0
 }
