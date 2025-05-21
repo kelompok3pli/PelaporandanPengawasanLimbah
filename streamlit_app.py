@@ -29,6 +29,9 @@ def simpan_laporan(data):
     df.to_csv(DATA_PATH, index=False)
 
 # Sidebar menu
+lottie_json = load_lottieurl("https://lottie.host/7915dd54-2164-4a28-8b4a-8088e25477a0/LuARVW5S95.json")
+    if lottie_json:
+        st_lottie(lottie_json, height=200, key="navigasi")
 st.sidebar.title("♻️ Navigasi Aplikasi")
 menu = st.sidebar.radio("Pilih Halaman:", [
     "Beranda",
